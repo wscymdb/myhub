@@ -4,6 +4,7 @@ const {
   NAME_IS_ALREADY_EXISTS,
   UNKNOW_ERROR,
   NAME_OR_PASSWORD_IS_INCORRECT,
+  UNAUTHORIZATION,
 } = require('../config/error.config')
 
 app.on('error', (error, ctx) => {
@@ -24,6 +25,11 @@ app.on('error', (error, ctx) => {
     case NAME_OR_PASSWORD_IS_INCORRECT:
       code = -1003
       msg = '用户名或密码错误，请重新输入～'
+      break
+
+    case UNAUTHORIZATION:
+      code = -1004
+      msg = '无效的token～'
       break
 
     case UNKNOW_ERROR:
