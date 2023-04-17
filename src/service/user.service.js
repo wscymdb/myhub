@@ -24,7 +24,7 @@ class UserService {
   }
 
   async findUserByName(name) {
-    const searchSql = `SELECT name FROM users WHERE name = ?`
+    const searchSql = `SELECT id,name,password FROM users WHERE name = ?`
     // 查看数据库中是否有该用户
     const [value] = await pool.execute(searchSql, [name])
     return value
