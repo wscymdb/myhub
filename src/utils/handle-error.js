@@ -5,6 +5,7 @@ const {
   UNKNOW_ERROR,
   NAME_OR_PASSWORD_IS_INCORRECT,
   UNAUTHORIZATION,
+  UNPERMISSION,
 } = require('../config/error.config')
 
 app.on('error', (error, ctx) => {
@@ -35,6 +36,11 @@ app.on('error', (error, ctx) => {
     case UNKNOW_ERROR:
       code = -1111
       msg = '未知错误，请联系管理员～'
+      break
+
+    case UNPERMISSION:
+      code = -1112
+      msg = '没有权限执行该操作～'
       break
   }
   console.log(code, msg)
