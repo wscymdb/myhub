@@ -15,6 +15,7 @@ async function verifyToken(ctx, next) {
     ctx.tokenInfo = result
     await next()
   } catch (error) {
+    console.log(error)
     ctx.app.emit('error', UNAUTHORIZATION, ctx)
   }
 }
