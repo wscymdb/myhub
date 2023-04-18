@@ -1,7 +1,7 @@
 const KoaRouter = require('@koa/router')
 const verifyToken = require('../middleware/token.middleware')
 const momentController = require('../controller/moment.controller')
-const verifMomentPermission = require('../middleware/permission.middleware')
+const verifPermission = require('../middleware/permission.middleware')
 
 const momentRouter = new KoaRouter({ prefix: '/moment' })
 
@@ -18,8 +18,15 @@ momentRouter.post('/:id', momentController.detail)
 momentRouter.patch(
   '/',
   verifyToken,
-  verifMomentPermission,
+  verifPermission('moment'),
   momentController.update
 )
 
+// 删除动态  只有登陆的用户才能修改动态
+momentRouter.delete(
+  '/:id',
+  verifyToken,
+  verifPermission('moment'),
+  momentController.delete
+)
 module.exports = momentRouter

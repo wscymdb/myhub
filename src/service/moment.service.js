@@ -50,7 +50,24 @@ class MomentService {
         return false
       }
     } catch (error) {
-      console.log(error)
+      console.log(error, 'updateMoment')
+      ctx.app.emit('error', UNKNOW_ERROR, ctx)
+    }
+  }
+
+  async deleteById(id, ctx) {
+    const sql = `DELETE FROM moment WHERE id = ?`
+    const [value] = await connection.execute(sql, [id])
+
+    try {
+      if (value.affectedRows > 0) {
+        return true
+      } else {
+        ctx.app.emit('error', UNKNOW_ERROR, ctx)
+        return false
+      }
+    } catch (error) {
+      console.log(error, 'updateMoment')
       ctx.app.emit('error', UNKNOW_ERROR, ctx)
     }
   }

@@ -52,6 +52,16 @@ class MomentController {
       ctx.body = { code: 0, msg: '修改成功～' }
     }
   }
+
+  async delete(ctx, next) {
+    const { id } = ctx.params
+
+    if (!id) return
+    const result = await momentService.deleteById(id, ctx)
+    if (result) {
+      ctx.body = { code: 0, msg: '删除成功～' }
+    }
+  }
 }
 
 module.exports = new MomentController()

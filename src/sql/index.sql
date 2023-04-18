@@ -22,3 +22,21 @@ CREATE TABLE
         updateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         Foreign Key (user_id) REFERENCES `users`(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
+
+-- 评论表
+
+--  comment_id 表示一个动态会有评论，但是这条评论可能被别人评论
+
+CREATE TABLE
+    IF NOT EXISTS `comment`(
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        content VARCHAR(1000) NOT NULL,
+        moment_id INT NOT NULL,
+        user_id INT NOT NULL,
+        comment_id INT DEFAULT NULL,
+        crateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        Foreign Key (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        Foreign Key (moment_id) REFERENCES moment(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        Foreign Key (comment_id) REFERENCES comment(id) ON DELETE CASCADE ON UPDATE CASCADE
+    );

@@ -1,11 +1,17 @@
 const connection = require('../app/database')
 
 class PermissionService {
-  async momentChecke(ctx) {
+  async check(ctx, resourceName) {
     const { id: userId } = ctx.tokenInfo
-    const { id: momentId } = ctx.request.body
+    let momentId
+    const method = ctx.method
 
-    const sql = `SELECT * FROM moment WHERE user_id = ? AND id = ?`
+    if (method === 'PATCH') {
+      momentId = ctx.request.body.id
+    } else {
+      momentId = ctx.params.id
+    }
+    const sql = `SELECT * FROM ${resourceName} WHERE user_id = ? AND id = ?`
 
     const [value] = await connection.execute(sql, [userId, momentId])
     return !!value.length
