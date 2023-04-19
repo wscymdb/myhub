@@ -22,7 +22,20 @@ class MomentService {
   async queryList(payload, ctx) {
     const { current, pageSize } = payload
 
-    const sql = `SELECT mt.id id, mt.content content, mt.createAt createTime, mt.updateAt updateTime, JSON_OBJECT('id', us.id, 'name', us.name) userInfo FROM moment mt LEFT JOIN users us ON mt.user_id = us.id LIMIT ? OFFSET ? `
+    const sql = `SELECT
+    mt.id id,
+    mt.content content,
+    mt.createAt createTime,
+    mt.updateAt updateTime,
+    JSON_OBJECT('id', us.id, 'name', us.name) userInfo, (
+        SELECT COUNT(*)
+        FROM comment ct
+        WHERE
+            mt.id = ct.moment_id
+    ) commentCount
+FROM moment mt
+    LEFT JOIN users us ON mt.user_id = us.id
+    LIMIT ? OFFSET ? `
 
     const [value] = await connection.execute(sql, [
       String(pageSize),
@@ -32,7 +45,31 @@ class MomentService {
   }
 
   async queryListById(id, ctx) {
-    const sql = `SELECT mt.id id, mt.content content, mt.createAt createTime, mt.updateAt updateTime, JSON_OBJECT('id', us.id, 'name', us.name) userInfo FROM moment mt LEFT JOIN users us ON mt.user_id = us.id WHERE mt.id = ?`
+    const sql = `SELECT
+    mt.id id,
+    mt.content content,
+    mt.createAt createTime,
+    mt.updateAt updateTime,
+    JSON_OBJECT('id', us.id, 'name', us.name) userInfo, (
+        JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'id',
+                ct.id,
+                'content',
+                ct.content,
+                'commentId',
+                ct.comment_id,
+                'userInfo',
+                JSON_OBJECT('id', cus.id, 'name', cus.name)
+            )
+        )
+    ) comments
+FROM moment mt
+    LEFT JOIN users us ON mt.user_id = us.id
+    LEFT JOIN comment ct ON mt.id = ct.moment_id
+    LEFT JOIN users cus ON ct.user_id = cus.id
+WHERE mt.id = ?
+GROUP BY id`
 
     const [value] = await connection.execute(sql, [id])
     return value
