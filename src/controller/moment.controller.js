@@ -1,3 +1,4 @@
+const { UNKNOW_ERROR } = require('../config/error.config')
 const momentService = require('../service/moment.service')
 
 class MomentController {
@@ -60,6 +61,31 @@ class MomentController {
     const result = await momentService.deleteById(id, ctx)
     if (result) {
       ctx.body = { code: 0, msg: '删除成功～' }
+    }
+  }
+
+  async addLabels(ctx, next) {
+    const { id } = ctx.params
+    const labels = ctx.labels
+
+    try {
+      // 将id(momentID)和label添加到moment_label表中
+      for (let label of labels) {
+        // 判断当前存入的label_id和moment_id，表里是否存在相同的记录
+        const isExists = await momentService.hasLabel(id, label.id)
+        if (isExists) continue
+
+        // 不存在才添加
+        const insertResult = await momentService.addLabels(id, label.id)
+      }
+
+      ctx.body = {
+        code: 0,
+        msg: '添加成功～',
+      }
+    } catch (error) {
+      console.log(error)
+      ctx.app.emit('error', UNKNOW_ERROR, ctx)
     }
   }
 }

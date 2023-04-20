@@ -11,6 +11,7 @@ class PermissionService {
     } else {
       momentId = ctx.params.id
     }
+
     const sql = `SELECT * FROM ${resourceName} WHERE user_id = ? AND id = ?`
 
     const [value] = await connection.execute(sql, [userId, momentId])
