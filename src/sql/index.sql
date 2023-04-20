@@ -7,6 +7,7 @@ CREATE TABLE
         id INT PRIMARY KEY AUTO_INCREMENT,
         name VARCHAR(30) NOT NULL UNIQUE,
         password VARCHAR(50) NOT NULL,
+        avatar_url VARCHAR(255),
         createAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
@@ -66,4 +67,18 @@ CREATE TABLE
         PRIMARY KEY(moment_id, label_id),
         Foreign Key (moment_id) REFERENCES moment(id) ON UPDATE CASCADE ON DELETE CASCADE,
         Foreign Key (label_id) REFERENCES label(id) ON UPDATE CASCADE ON DELETE CASCADE
+    );
+
+-- 头像表
+
+CREATE TABLE
+    IF NOT EXISTS `avatar` (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        filename VARCHAR(255) NOT NULL UNIQUE,
+        mimeType VARCHAR(30),
+        size INT,
+        user_id INT,
+        createAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        Foreign Key (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
     );

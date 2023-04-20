@@ -65,7 +65,7 @@ FROM moment mt
                     'commentId',
                     ct.comment_id,
                     'userInfo',
-                    JSON_OBJECT('id', cus.id, 'name', cus.name)
+                    JSON_OBJECT('id', cus.id, 'name', cus.name,'avatarUrl',cus.avatar_url)
                 )
             )
         FROM comment ct

@@ -29,6 +29,20 @@ class UserService {
     const [value] = await pool.execute(searchSql, [name])
     return value
   }
+
+  async showAvatarById(id) {
+    const sql = `SELECT * FROM avatar WHERE user_id = ?`
+    const [value] = await pool.execute(sql, [id])
+    // 可能有多张头像 取最新（后上传的）的
+    return value.pop()
+  }
+
+  async updateUserAvatar(avatarUrl, id) {
+    const sql = `UPDATE users SET avatar_url = ? WHERE id = ?`
+
+    const [value] = await pool.execute(sql, [avatarUrl, id])
+    return value
+  }
 }
 
 module.exports = new UserService()

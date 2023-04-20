@@ -14,4 +14,6 @@ userRouter.post(
   userController.create
 )
 
+// 为用户提供头像
+userRouter.get('/avatar/:id', userController.showAvatarImage)
 module.exports = userRouter
